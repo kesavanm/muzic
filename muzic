@@ -2,7 +2,7 @@
 #music site search
 #####	LOGIN Again
 rm -f /tmp/muzic.login
-wget --header='Host: www.cooltoad.com' --cookies=on --keep-session-cookies --save-cookies=/tmp/muzic.cookie --post-data 'ACCOUNT=metoome&PASSWORD=kumar9' 'http://www.cooltoad.com/account/login.php' --content-disposition -c -O /tmp/muzic.login  --no-verbose
+wget --header='Host: www.cooltoad.com' --cookies=on --keep-session-cookies --save-cookies=/tmp/muzic.cookie --post-data 'ACCOUNT=YOUR_USER_NAME&PASSWORD=PASSWORD' 'http://www.cooltoad.com/account/login.php' --content-disposition -c -O /tmp/muzic.login  --no-verbose
 
 ##### SEARCH
 SITE='http://music3.cooltoad.com/music/search.php?TITLE='
