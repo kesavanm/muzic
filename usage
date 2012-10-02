@@ -1,0 +1,23 @@
+priya@localhost:~$ bin/muzic naanaa
+2012-10-02 14:00:15 URL:http://www.cooltoad.com/account/login.php [3726] -> "/tmp/muzic.login" [1]
+2012-10-02 14:00:17 URL:http://music3.cooltoad.com/music/search.php?TITLE=naanaa [9031] -> "/tmp/search.result" [1]
+============================================================================
+1 1979 Oddanchatram - NOOL VELI - naanaa paaduvathu naanaa   4.0 MB (128-bit) 4:23
+2 Azhagae Unnai Arathikkiren - Naane Naanaa 4.0 MB (128-bit) 4:24
+3 ECKO)- AASAI MUGAM - Neeyaa illai naanaa   3.0 MB (128-bit) 3:15
+4 karunakaran6 _Paaduvathu Naanaa - SPB 60 - 70 Hits   4.1 MB (128-bit) 4:26
+5 karunakaran6 _Ponnum porulum parisalla- Neeyaa Naanaa   3.3 MB (128-bit) 3:33
+6 narayantuty - NOOL VELI - Naanaa paaduvathu naanaa   4.0 MB (128-bit) 4:25
+7 Neeyaa illai naanaa   4.1 MB (128-bit) 4:26
+Search Done!
+============================================================================
+Enter your choice:7
+---------Choice Made: 7----------------------------
+
+SONGID is 368381
+2012-10-02 14:00:28 URL:http://music3.cooltoad.com/music/download.php?id=368381 [5278] -> "/tmp/muzic.download" [1]
+http://ds2.cooltoad.com/music/send.php?id=368381&name=Neeyaaillainaanaa.mp3&token=song.368381.506a7886efe88141
+2012-10-02 14:02:49 URL:http://ds2.cooltoad.com/music/send.php?id=368381&name=Neeyaaillainaanaa.mp3&token=song.368381.506a7886efe88141 [4304351/4304351] -> "Neeyaaillainaanaa.mp3" [1]
+priya@localhost:~$ 
+
+
