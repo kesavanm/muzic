@@ -1,5 +1,6 @@
 #!/bin/bash
 #music site search
+#auth : hi@kesavan.info
 
 USER='';
 PSWD='';
@@ -7,7 +8,7 @@ TMPDIR='/tmp/';
 
 #####   LOGIN
 rm -f $TMPDIR.muzic.login
-wget --header='Host: www.cooltoad.com' --cookies=on --keep-session-cookies --save-cookies=$TMPDIR.muzic.cookie --post-data 'ACCOUNT=$USER&PASSWORD=$PSWD' 'http://www.cooltoad.com/account/login.php' --content-disposition -c -O $TMPDIR.muzic.login  --no-verbose
+wget --header='Host: www.cooltoad.com' --cookies=on --keep-session-cookies --save-cookies=$TMPDIR.muzic.cookie --post-data "ACCOUNT=$USER&PASSWORD=$PSWD" 'http://www.cooltoad.com/account/login.php' --content-disposition -c -O $TMPDIR.muzic.login  --no-verbose
 
 ##### SEARCH
 SITE='http://music3.cooltoad.com/music/search.php?TITLE='
@@ -18,21 +19,32 @@ echo ===========================================================================
 sed -e 's/<[^>]*>/-----/g'  $TMPDIR.search.result |grep Artist:|sed -e 's/------------------------------//g' -e 's/&nbsp;//g' -e 's/Artist: //g' -e 's/Length: //g' -e 's/Size: //g'|awk -F ----- '{print NR,  $5,$4,$3}'
 echo "Search Done!"
 echo ============================================================================
-echo -n "Enter your choice:"
-read CHOICE
-echo    ---------Choice Made: $CHOICE----------------------------
-SONGID=`grep -o -e '[0-9]*&PHPSESSID=[a-z0-9]*' $TMPDIR.search.result|awk -F '&' '{print NR,$1}'|grep -e "^$CHOICE"|awk '{print $2}'`
+
+ChoiceDone=0
+while [ $ChoiceDone -eq 0 ]
+   do
+        echo -n "Enter your choice:"
+        read CHOICE
+        echo    ---------Choice Made: $CHOICE----------------------------
+        SONGID=`grep -o -e '[0-9]*&PHPSESSID=[a-z0-9]*' $TMPDIR.search.result|awk -F '&' '{print NR,$1}'|grep -e "^$CHOICE"|awk '{print $2}'`
+
+        if [ -z $SONGID ];then
+                ChoiceDone=0
+        else ChoiceDone=1
+        fi
+   done
 echo SONGID is $SONGID
+
 #####   LOGIN
 rm -f $TMPDIR.muzic.login
-wget --header='Host: www.cooltoad.com' --cookies=on --keep-session-cookies --save-cookies=$TMPDIR.muzic.cookie --post-data 'ACCOUNT=metoome&PASSWORD=kumar9' 'http://www.cooltoad.com/account/login.php' --content-disposition -c -O $TMPDIR.muzic.login --no-verbose
+wget --header='Host: www.cooltoad.com' --cookies=on --keep-session-cookies --save-cookies=$TMPDIR.muzic.cookie --post-data "ACCOUNT=$USER&PASSWORD=$PSWD" 'http://www.cooltoad.com/account/login.php' --content-disposition -c -O $TMPDIR.muzic.login --no-verbose
 
 ##### Download page
 rm -f $TMPDIR.muzic.download
-wget --header='Host: music3.cooltoad.com' --header='DNT: 1' --post-data 'ACCOUNT=YOUR_USER_NAME&PASSWORD=PASSWORD' --header='Connection: keep-alive' --header="Referer: http://music3.cooltoad.com/music/song.php?id=$SONGID"  --header='Connection: keep-alive' --cookies=on --keep-session-cookies --load-cookies=$TMPDIR.muzic.cookie "http://music3.cooltoad.com/music/download.php?id=$SONGID" --content-disposition -c -O $TMPDIR.muzic.download --no-verbose
+wget --header='Host: music3.cooltoad.com' --header='DNT: 1' --post-data "ACCOUNT=$USER&PASSWORD=$PSWD" --header='Connection: keep-alive' --header="Referer: http://music3.cooltoad.com/music/song.php?id=$SONGID"  --header='Connection: keep-alive' --cookies=on --keep-session-cookies --load-cookies=$TMPDIR.muzic.cookie "http://music3.cooltoad.com/music/download.php?id=$SONGID" --content-disposition -c -O $TMPDIR.muzic.download --no-verbose
 
 ##### Get TOKEN
-TOKENURI=`grep token  /tmp/muzic.download|grep -o -e 'send.php?id=[0-9]*&name=[^~]*&token=song.[0-9]*.[0-9a-f]*'|sort|uniq|awk '{print "http://ds2.cooltoad.com/music/"$1}'`
-SONGNAME=`grep -o -e 'name=[^~&]*' /tmp/muzic.download |awk -F '=' '{print $2}'|uniq`
+TOKENURI=`grep token  $TMPDIR.muzic.download|grep -o -e 'send.php?id=[0-9]*&name=[^~]*&token=song.[0-9]*.[0-9a-f]*'|sort|uniq|awk '{print "http://ds2.cooltoad.com/music/"$1}'`
+SONGNAME=`grep -o -e 'name=[^~&]*' $TMPDIR.muzic.download |awk -F '=' '{print $2}'|uniq`
 ##############  FORMAT TO Download
-wget --header='Host: ds2.cooltoad.com' --header='DNT: 1' --header='Connection: keep-alive'  --load-cookies=/tmp/muzic.cookie "$TOKENURI"  -c -O "$SONGNAME" 
+wget --header='Host: ds2.cooltoad.com' --header='DNT: 1' --header='Connection: keep-alive'  --load-cookies=$TMPDIR.muzic.cookie "$TOKENURI"  -c -O "$SONGNAME"
