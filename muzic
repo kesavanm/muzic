@@ -43,8 +43,27 @@ wget --header='Host: www.cooltoad.com' --cookies=on --keep-session-cookies --sav
 rm -f $TMPDIR.muzic.download
 wget --header='Host: music3.cooltoad.com' --header='DNT: 1' --post-data "ACCOUNT=$USER&PASSWORD=$PSWD" --header='Connection: keep-alive' --header="Referer: http://music3.cooltoad.com/music/song.php?id=$SONGID"  --header='Connection: keep-alive' --cookies=on --keep-session-cookies --load-cookies=$TMPDIR.muzic.cookie "http://music3.cooltoad.com/music/download.php?id=$SONGID" --content-disposition -c -O $TMPDIR.muzic.download --no-verbose
 
+########### Avail Servers
+#Server[0]='ds2.cooltoad.com'
+Server[1]='ds3.cooltoad.com'
+Server[2]='ds4.cooltoad.com'
+
+echo "Choosing the best servers for you"
+echo "It may take some time, Please wait"
+echo "=================================="
+for server in "${Server[@]}"
+do
+        Status=`ping -q -c1 $server`
+        PStatus=$?
+        if [ $PStatus  -eq 0 ] ; then break; fi;
+done
+echo "Server $server seems best for you & is going to used"
+
 ##### Get TOKEN
-TOKENURI=`grep token  $TMPDIR.muzic.download|grep -o -e 'send.php?id=[0-9]*&name=[^~]*&token=song.[0-9]*.[0-9a-f]*'|sort|uniq|awk '{print "http://ds2.cooltoad.com/music/"$1}'`
+URI="http://$server/music/"
+TOKENURI=`grep token $TMPDIR.muzic.download|grep -o -e 'send.php?id=[0-9]*&name=[^~]*&token=song.[0-9]*.[0-9a-f]*'|sort|uniq|awk '{print $1}'`
+TOKENURI=$URI$TOKENURI
 SONGNAME=`grep -o -e 'name=[^~&]*' $TMPDIR.muzic.download |awk -F '=' '{print $2}'|uniq`
-##############  FORMAT TO Download
-wget --header='Host: ds2.cooltoad.com' --header='DNT: 1' --header='Connection: keep-alive'  --load-cookies=$TMPDIR.muzic.cookie "$TOKENURI"  -c -O "$SONGNAME"
+
+############## FORMAT TO Download
+wget --header='Host: $server'  --header='DNT: 1' --header='Connection: keep-alive' --load-cookies=$TMPDIR.muzic.cookie "$TOKENURI" -c -O "$SONGNAME"
